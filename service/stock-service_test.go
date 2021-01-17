@@ -14,7 +14,7 @@ func TestStockService(t *testing.T) {
 }
 
 var (
-	weg = entity.Stock{"Weg", "WEGE3"}
+	weg = entity.Stock{Name: "Weg", Ticker: "WEGE3"}
 )
 
 var service StockService

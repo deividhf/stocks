@@ -14,6 +14,10 @@ var (
 )
 
 func main() {
+	setupServer().Run(":8090")
+}
+
+func setupServer() *gin.Engine {
 	server := gin.Default()
 
 	server.GET("/stocks", func(ctx *gin.Context) {
@@ -31,5 +35,5 @@ func main() {
 		}
 	})
 
-	server.Run(":8090")
+	return server
 }
