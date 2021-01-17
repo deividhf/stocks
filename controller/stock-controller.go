@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// StockController deals with the requisition
+// StockController deals with the request
 type StockController interface {
 	Save(ctx *gin.Context) (entity.Stock, error)
 	FindAll() []entity.Stock
