@@ -1,4 +1,4 @@
-package main
+package stocks
 
 import (
 	"fmt"
@@ -17,13 +17,14 @@ var w *httptest.ResponseRecorder
 
 func TestServer(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Server Test Suite")
+	RunSpecs(t, "Stocks Router Test Suite")
 }
 
-var _ = Describe("Server Test", func() {
+var _ = Describe("Stocks Router Test", func() {
 
 	BeforeSuite(func() {
-		router = setupServer()
+		router = gin.Default()
+		Routes(router)
 	})
 
 	Describe("Getting stocks", func() {
