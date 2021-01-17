@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/deividhf/stocks/controller"
 	"github.com/deividhf/stocks/service"
 	"github.com/gin-gonic/gin"
@@ -15,11 +17,16 @@ func main() {
 	server := gin.Default()
 
 	server.GET("/stocks", func(ctx *gin.Context) {
-		ctx.JSON(200, stockController.FindAll())
+		ctx.JSON(http.StatusOK, stockController.FindAll())
 	})
 
 	server.POST("/stocks", func(ctx *gin.Context) {
-		ctx.JSON(201, stockController.Save(ctx))
+		err := stockController.Save(ctx)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+		}
 	})
 
 	server.Run(":8090")

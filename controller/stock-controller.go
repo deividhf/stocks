@@ -6,8 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// StockController deals with the requisition
 type StockController interface {
-	Save(ctx *gin.Context) entity.Stock
+	Save(ctx *gin.Context) error
 	FindAll() []entity.Stock
 }
 
@@ -22,11 +23,16 @@ func New(service service.StockService) StockController {
 	}
 }
 
-func (c *stockController) Save(ctx *gin.Context) entity.Stock {
+func (c *stockController) Save(ctx *gin.Context) error {
 	var stock entity.Stock
-	ctx.BindJSON(&stock)
 
-	return c.service.Save(stock)
+	if err := ctx.ShouldBindJSON(&stock); err != nil {
+		return err
+	}
+
+	c.service.Save(stock)
+
+	return nil
 }
 
 func (c *stockController) FindAll() []entity.Stock {

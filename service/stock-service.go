@@ -2,6 +2,7 @@ package service
 
 import "github.com/deividhf/stocks/entity"
 
+// StockService is responsible to manage the core logic by communicating with entity layer
 type StockService interface {
 	Save(stock entity.Stock) entity.Stock
 	FindAll() []entity.Stock
@@ -20,7 +21,7 @@ func (s *stockService) FindAll() []entity.Stock {
 	return s.stocks
 }
 
-// New create a new StockService
+// New creates a new StockService
 func New() StockService {
 	return &stockService{stocks: []entity.Stock{}}
 }
