@@ -21,11 +21,13 @@ func main() {
 	})
 
 	server.POST("/stocks", func(ctx *gin.Context) {
-		err := stockController.Save(ctx)
+		stock, err := stockController.Save(ctx)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
+		} else {
+			ctx.JSON(http.StatusCreated, stock)
 		}
 	})
 

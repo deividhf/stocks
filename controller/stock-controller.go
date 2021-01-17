@@ -8,7 +8,7 @@ import (
 
 // StockController deals with the requisition
 type StockController interface {
-	Save(ctx *gin.Context) error
+	Save(ctx *gin.Context) (entity.Stock, error)
 	FindAll() []entity.Stock
 }
 
@@ -23,16 +23,14 @@ func New(service service.StockService) StockController {
 	}
 }
 
-func (c *stockController) Save(ctx *gin.Context) error {
+func (c *stockController) Save(ctx *gin.Context) (entity.Stock, error) {
 	var stock entity.Stock
 
 	if err := ctx.ShouldBindJSON(&stock); err != nil {
-		return err
+		return stock, err
 	}
 
-	c.service.Save(stock)
-
-	return nil
+	return c.service.Save(stock), nil
 }
 
 func (c *stockController) FindAll() []entity.Stock {
