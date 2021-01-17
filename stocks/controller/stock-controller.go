@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/deividhf/stocks/entity"
-	"github.com/deividhf/stocks/service"
+	"github.com/deividhf/stocks/stocks/entity"
+	"github.com/deividhf/stocks/stocks/service"
 	"github.com/gin-gonic/gin"
 )
 

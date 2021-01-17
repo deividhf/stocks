@@ -1,6 +1,6 @@
 package service
 
-import "github.com/deividhf/stocks/entity"
+import "github.com/deividhf/stocks/stocks/entity"
 
 // StockService is responsible to manage the core logic by communicating with entity layer
 type StockService interface {

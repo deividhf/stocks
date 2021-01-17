@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/deividhf/stocks/entity"
+	"github.com/deividhf/stocks/stocks/entity"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
