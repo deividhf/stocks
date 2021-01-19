@@ -12,7 +12,8 @@ func main() {
 func setupServer() *gin.Engine {
 	server := gin.Default()
 
-	stocks.Routes(server)
+	router := stocks.DefaultRouter()
+	router.Routes(server)
 
 	return server
 }
