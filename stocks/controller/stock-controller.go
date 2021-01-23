@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/deividhf/stocks/stocks/entity"
-	"github.com/deividhf/stocks/stocks/service"
+	"github.com/deividhf/stocks/stocks/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,13 +13,13 @@ type StockController interface {
 }
 
 type stockController struct {
-	service service.StockService
+	repository repository.StockRepository
 }
 
 // New creates a StockController
-func New(service service.StockService) StockController {
+func New(repository repository.StockRepository) StockController {
 	return &stockController{
-		service: service,
+		repository: repository,
 	}
 }
 
@@ -30,9 +30,9 @@ func (c *stockController) Save(ctx *gin.Context) (entity.Stock, error) {
 		return stock, err
 	}
 
-	return c.service.Save(stock), nil
+	return c.repository.Save(stock), nil
 }
 
 func (c *stockController) FindAll() []entity.Stock {
-	return c.service.FindAll()
+	return c.repository.FindAll()
 }

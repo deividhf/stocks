@@ -1,4 +1,4 @@
-package service
+package repository
 
 import (
 	"database/sql"
@@ -12,20 +12,20 @@ import (
 	"gorm.io/gorm"
 )
 
-func TestStockService(t *testing.T) {
+func TestStockRepository(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Stock Service Test Suite")
+	RunSpecs(t, "Stock Repository Test Suite")
 }
 
 var (
-	weg     = entity.Stock{Name: "Weg", Ticker: "WEGE3"}
-	service StockService
-	db      *sql.DB
-	gdb     *gorm.DB
-	mock    sqlmock.Sqlmock
+	weg        = entity.Stock{Name: "Weg", Ticker: "WEGE3"}
+	repository StockRepository
+	db         *sql.DB
+	gdb        *gorm.DB
+	mock       sqlmock.Sqlmock
 )
 
-var _ = Describe("Stock Service", func() {
+var _ = Describe("Stock Repository", func() {
 
 	BeforeEach(func() {
 		var err error
@@ -41,7 +41,7 @@ var _ = Describe("Stock Service", func() {
 		gdb, err = gorm.Open(dialector, &gorm.Config{})
 		Ω(err).ShouldNot(HaveOccurred())
 
-		service = New(gdb)
+		repository = New(gdb)
 	})
 
 	Describe("Fetching all stocks", func() {
@@ -54,7 +54,7 @@ var _ = Describe("Stock Service", func() {
 			})
 
 			It("should return an empty array", func() {
-				stocks := service.FindAll()
+				stocks := repository.FindAll()
 				Ω(stocks).Should(BeEmpty())
 			})
 
@@ -68,12 +68,12 @@ var _ = Describe("Stock Service", func() {
 			})
 
 			It("array most not be empty", func() {
-				stocks := service.FindAll()
+				stocks := repository.FindAll()
 				Ω(stocks).ShouldNot(BeEmpty())
 			})
 
 			It("should return the saved elements", func() {
-				stock := service.FindAll()[0]
+				stock := repository.FindAll()[0]
 				Ω(stock).Should(Equal(weg))
 			})
 
@@ -89,7 +89,7 @@ var _ = Describe("Stock Service", func() {
 			})
 
 			It("should return the saved element", func() {
-				stock := service.Save(weg)
+				stock := repository.Save(weg)
 				Ω(stock).Should(Equal(weg))
 			})
 		})

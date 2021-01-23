@@ -5,7 +5,7 @@ import (
 
 	"github.com/deividhf/stocks/config"
 	"github.com/deividhf/stocks/stocks/controller"
-	"github.com/deividhf/stocks/stocks/service"
+	"github.com/deividhf/stocks/stocks/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +21,7 @@ type stockRouter struct {
 // DefaultRouter returns the default router
 func DefaultRouter() StockRouter {
 	return &stockRouter{
-		controller: controller.New(service.New(config.DB)),
+		controller: controller.New(repository.New(config.DB)),
 	}
 }
 

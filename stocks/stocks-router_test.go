@@ -8,7 +8,7 @@ import (
 
 	"github.com/deividhf/stocks/stocks/controller"
 	"github.com/deividhf/stocks/stocks/entity"
-	"github.com/deividhf/stocks/stocks/service/mocks"
+	"github.com/deividhf/stocks/stocks/repository/mocks"
 	"github.com/gin-gonic/gin"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -21,15 +21,15 @@ func TestServer(t *testing.T) {
 
 var router *gin.Engine
 var w *httptest.ResponseRecorder
-var serviceMock *mocks.StockServiceMock
+var repositoryMock *mocks.StockRepositoryMock
 
 var _ = Describe("Stocks Router Test", func() {
 
 	BeforeSuite(func() {
 		router = gin.Default()
-		serviceMock = &mocks.StockServiceMock{}
+		repositoryMock = &mocks.StockRepositoryMock{}
 
-		stockRouter := New(controller.New(serviceMock))
+		stockRouter := New(controller.New(repositoryMock))
 		stockRouter.Routes(router)
 	})
 
@@ -38,7 +38,7 @@ var _ = Describe("Stocks Router Test", func() {
 		Context("When there is no stocks", func() {
 
 			BeforeEach(func() {
-				serviceMock.On("FindAll").Return([]entity.Stock{}).Once()
+				repositoryMock.On("FindAll").Return([]entity.Stock{}).Once()
 
 				w = httptest.NewRecorder()
 				req, _ := http.NewRequest("GET", "/stocks", nil)
@@ -59,7 +59,7 @@ var _ = Describe("Stocks Router Test", func() {
 
 			BeforeEach(func() {
 				stock = entity.Stock{ID: 0, Name: "Weg", Ticker: "WEGE3"}
-				serviceMock.On("FindAll").Return([]entity.Stock{stock}).Once()
+				repositoryMock.On("FindAll").Return([]entity.Stock{stock}).Once()
 
 				w = httptest.NewRecorder()
 				req, _ := http.NewRequest("GET", "/stocks", nil)
@@ -82,7 +82,7 @@ var _ = Describe("Stocks Router Test", func() {
 
 			BeforeEach(func() {
 				savedStock := entity.Stock{ID: 0, Name: "Weg", Ticker: "WEGE3"}
-				serviceMock.On("Save", savedStock).Return(savedStock).Once()
+				repositoryMock.On("Save", savedStock).Return(savedStock).Once()
 
 				w = httptest.NewRecorder()
 				req, _ := http.NewRequest("POST", "/stocks", strings.NewReader(`{"name":"Weg","ticker":"WEGE3"}`))

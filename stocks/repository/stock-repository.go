@@ -1,4 +1,4 @@
-package service
+package repository
 
 import (
 	"log"
@@ -7,17 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-// StockService is responsible to manage the core logic by communicating with entity layer
-type StockService interface {
+// StockRepository is responsible to manage the core logic by communicating with entity layer
+type StockRepository interface {
 	Save(stock entity.Stock) entity.Stock
 	FindAll() []entity.Stock
 }
 
-type stockService struct {
+type stockRepository struct {
 	db *gorm.DB
 }
 
-func (s *stockService) Save(stock entity.Stock) entity.Stock {
+func (s *stockRepository) Save(stock entity.Stock) entity.Stock {
 	if result := s.db.Create(&stock); result.Error != nil {
 		log.Panicf("Error on saving stock. %s", result.Error)
 	}
@@ -25,7 +25,7 @@ func (s *stockService) Save(stock entity.Stock) entity.Stock {
 	return stock
 }
 
-func (s *stockService) FindAll() []entity.Stock {
+func (s *stockRepository) FindAll() []entity.Stock {
 	stocks := make([]entity.Stock, 1)
 
 	if result := s.db.Find(&stocks); result.Error != nil {
@@ -35,7 +35,7 @@ func (s *stockService) FindAll() []entity.Stock {
 	return stocks
 }
 
-// New creates a new StockService
-func New(db *gorm.DB) StockService {
-	return &stockService{db}
+// New creates a new StockRepository
+func New(db *gorm.DB) StockRepository {
+	return &stockRepository{db}
 }
