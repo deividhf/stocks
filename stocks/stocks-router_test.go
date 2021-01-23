@@ -58,7 +58,7 @@ var _ = Describe("Stocks Router Test", func() {
 			var stock entity.Stock
 
 			BeforeEach(func() {
-				stock = entity.Stock{Name: "Weg", Ticker: "WEGE3"}
+				stock = entity.Stock{ID: 0, Name: "Weg", Ticker: "WEGE3"}
 				serviceMock.On("FindAll").Return([]entity.Stock{stock}).Once()
 
 				w = httptest.NewRecorder()
@@ -67,7 +67,7 @@ var _ = Describe("Stocks Router Test", func() {
 			})
 
 			It("should return a saved stock", func() {
-				expected := `[{"name":"Weg","ticker":"WEGE3"}]`
+				expected := `[{"id":0,"name":"Weg","ticker":"WEGE3"}]`
 				Ω(w.Body.String()).Should(Equal(expected))
 				Ω(w.Code).Should(Equal(200))
 
@@ -81,7 +81,7 @@ var _ = Describe("Stocks Router Test", func() {
 		Context("Saving a new stock", func() {
 
 			BeforeEach(func() {
-				savedStock := entity.Stock{Name: "Weg", Ticker: "WEGE3"}
+				savedStock := entity.Stock{ID: 0, Name: "Weg", Ticker: "WEGE3"}
 				serviceMock.On("Save", savedStock).Return(savedStock).Once()
 
 				w = httptest.NewRecorder()
@@ -90,7 +90,7 @@ var _ = Describe("Stocks Router Test", func() {
 			})
 
 			It("should return the saved stock", func() {
-				expected := `{"name":"Weg","ticker":"WEGE3"}`
+				expected := `{"id":0,"name":"Weg","ticker":"WEGE3"}`
 				Ω(w.Body.String()).Should(Equal(expected))
 				Ω(w.Code).Should(Equal(201))
 			})
