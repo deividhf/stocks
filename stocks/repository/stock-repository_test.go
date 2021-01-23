@@ -56,6 +56,7 @@ var _ = Describe("Stock Repository", func() {
 			It("should return an empty array", func() {
 				stocks := repository.FindAll()
 				Ω(stocks).Should(BeEmpty())
+				Ω(mock.ExpectationsWereMet()).Should(BeNil())
 			})
 
 		})
@@ -70,11 +71,13 @@ var _ = Describe("Stock Repository", func() {
 			It("array most not be empty", func() {
 				stocks := repository.FindAll()
 				Ω(stocks).ShouldNot(BeEmpty())
+				Ω(mock.ExpectationsWereMet()).Should(BeNil())
 			})
 
 			It("should return the saved elements", func() {
 				stock := repository.FindAll()[0]
 				Ω(stock).Should(Equal(weg))
+				Ω(mock.ExpectationsWereMet()).Should(BeNil())
 			})
 
 		})
@@ -91,6 +94,7 @@ var _ = Describe("Stock Repository", func() {
 			It("should return the saved element", func() {
 				stock := repository.Save(weg)
 				Ω(stock).Should(Equal(weg))
+				Ω(mock.ExpectationsWereMet()).Should(BeNil())
 			})
 		})
 	})
