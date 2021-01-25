@@ -5,22 +5,21 @@ import (
 
 	"github.com/deividhf/stocks/config"
 	"github.com/deividhf/stocks/stocks"
-	"github.com/deividhf/stocks/stocks/entity"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func main() {
 	var err error
-	config.DB, err = gorm.Open(sqlite.Open("stocks.db"), &gorm.Config{})
+	dns := "root:root@tcp(mysql:3306)/stocks?charset=utf8&parseTime=True&loc=Local"
+	config.DB, err = gorm.Open(mysql.Open(dns), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalf("Error opening database. %s", err)
 	}
-	config.DB.AutoMigrate(&entity.Stock{})
 
-	setupServer().Run(":8090")
+	setupServer().Run(":8080")
 }
 
 func setupServer() *gin.Engine {

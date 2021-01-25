@@ -8,7 +8,7 @@ import (
 	"github.com/deividhf/stocks/stocks/entity"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -32,11 +32,12 @@ var _ = Describe("Stock Repository", func() {
 		db, mock, err = sqlmock.New()
 		Ω(err).ShouldNot(HaveOccurred())
 
-		dialector := sqlite.Dialector{
-			DriverName: sqlite.DriverName,
-			DSN:        "sqlmock_db_0",
-			Conn:       db,
-		}
+		rows := sqlmock.NewRows([]string{"VERSION()"}).AddRow("3.7")
+		mock.ExpectQuery("SELECT").WillReturnRows(rows)
+
+		dialector := mysql.New(mysql.Config{
+			Conn: db,
+		})
 
 		gdb, err = gorm.Open(dialector, &gorm.Config{})
 		Ω(err).ShouldNot(HaveOccurred())

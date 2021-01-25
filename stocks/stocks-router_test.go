@@ -23,15 +23,15 @@ var router *gin.Engine
 var w *httptest.ResponseRecorder
 var repositoryMock *mocks.StockRepositoryMock
 
+var _ = BeforeSuite(func() {
+	router = gin.Default()
+	repositoryMock = &mocks.StockRepositoryMock{}
+
+	stockRouter := New(controller.New(repositoryMock))
+	stockRouter.Routes(router)
+})
+
 var _ = Describe("Stocks Router Test", func() {
-
-	BeforeSuite(func() {
-		router = gin.Default()
-		repositoryMock = &mocks.StockRepositoryMock{}
-
-		stockRouter := New(controller.New(repositoryMock))
-		stockRouter.Routes(router)
-	})
 
 	Describe("Getting stocks", func() {
 
