@@ -8,14 +8,26 @@ services:
       ports:
         - "8080:8080"
       depends_on: 
-        - "mysql"
+        mysql: 
+          condition: service_healthy
+      networks: 
+        - internal_net
   mysql:
     image: mysql
     container_name: mysql
     ports: 
       - "3306:3306"
     environment: 
-      - MYSQL_USER=docker
-      - MYSQL_PASSWORD=docker
-      - MYSQL_DATABASE=stocks
-      - MYSQL_ROOT_PASSWORD=root
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      MYSQL_DATABASE: stocks
+      MYSQL_ROOT_PASSWORD: root
+    networks: 
+      - internal_net
+    healthcheck:
+          test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+          timeout: 10s
+          retries: 10      
+networks:
+  internal_net:
+    driver: "bridge"
