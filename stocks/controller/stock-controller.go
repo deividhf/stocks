@@ -10,6 +10,7 @@ import (
 type StockController interface {
 	Save(ctx *gin.Context) (entity.Stock, error)
 	FindAll() []entity.Stock
+	GetByID(id string) (entity.Stock, error)
 }
 
 type stockController struct {
@@ -35,4 +36,8 @@ func (c *stockController) Save(ctx *gin.Context) (entity.Stock, error) {
 
 func (c *stockController) FindAll() []entity.Stock {
 	return c.repository.FindAll()
+}
+
+func (c *stockController) GetByID(id string) (entity.Stock, error) {
+	return c.repository.GetByID(id)
 }

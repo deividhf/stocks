@@ -12,6 +12,20 @@ type StockRepository struct {
 	mock.Mock
 }
 
+// DeleteByID provides a mock function with given fields: id
+func (_m *StockRepository) DeleteByID(id string) error {
+	ret := _m.Called(id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // FindAll provides a mock function with given fields:
 func (_m *StockRepository) FindAll() []entity.Stock {
 	ret := _m.Called()

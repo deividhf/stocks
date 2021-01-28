@@ -12,6 +12,7 @@ type StockRepository interface {
 	Save(stock entity.Stock) entity.Stock
 	FindAll() []entity.Stock
 	GetByID(id string) (entity.Stock, error)
+	DeleteByID(id string) error
 }
 
 type stockRepository struct {
@@ -44,6 +45,13 @@ func (r *stockRepository) GetByID(id string) (entity.Stock, error) {
 	}
 
 	return stock, nil
+}
+
+func (r *stockRepository) DeleteByID(id string) error {
+	if r.db.Delete(&entity.Stock{}, id).RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
 }
 
 // New creates a new StockRepository

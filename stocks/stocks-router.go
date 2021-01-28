@@ -40,6 +40,17 @@ func (r *stockRouter) Routes(route *gin.Engine) {
 		ctx.JSON(http.StatusOK, r.controller.FindAll())
 	})
 
+	stocks.GET("/:stock_id", func(ctx *gin.Context) {
+		stock, err := r.controller.GetByID(ctx.Param("stock_id"))
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+		} else {
+			ctx.JSON(http.StatusOK, stock)
+		}
+	})
+
 	stocks.POST("", func(ctx *gin.Context) {
 		stock, err := r.controller.Save(ctx)
 		if err != nil {

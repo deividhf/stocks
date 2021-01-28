@@ -132,6 +132,37 @@ var _ = Describe("Stock Repository", func() {
 		})
 	})
 
+	Describe("Deleting stocks", func() {
+
+		Context("When there is no stock", func() {
+
+			BeforeEach(func() {
+				mock.ExpectExec("DELETE FROM `stocks` WHERE `stocks`.`id`").WithArgs("2334").WillReturnResult(sqlmock.NewResult(0, 0))
+			})
+
+			It("should return an error", func() {
+				err := repository.DeleteByID("2334")
+				Ω(err).ShouldNot(BeNil())
+				Ω(errors.Is(err, gorm.ErrRecordNotFound)).Should(BeTrue())
+			})
+
+		})
+
+		Context("When there is the stock", func() {
+
+			BeforeEach(func() {
+				mock.ExpectExec("DELETE FROM `stocks` WHERE `stocks`.`id`").WithArgs("123").WillReturnResult(sqlmock.NewResult(123, 1))
+			})
+
+			It("should delete the record", func() {
+				err := repository.DeleteByID("123")
+				Ω(err).Should(BeNil())
+			})
+
+		})
+
+	})
+
 	AfterEach(func() {
 		db.Close()
 	})
