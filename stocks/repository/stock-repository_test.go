@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -18,7 +19,7 @@ func TestStockRepository(t *testing.T) {
 }
 
 var (
-	weg        = entity.Stock{Name: "Weg", Ticker: "WEGE3"}
+	weg        = entity.Stock{ID: 123, Name: "Weg", Ticker: "WEGE3"}
 	repository StockRepository
 	db         *sql.DB
 	gdb        *gorm.DB
@@ -50,7 +51,7 @@ var _ = Describe("Stock Repository", func() {
 		Context("When there is not stock", func() {
 
 			BeforeEach(func() {
-				rows := sqlmock.NewRows([]string{"name", "ticker"})
+				rows := sqlmock.NewRows([]string{"id", "name", "ticker"})
 				mock.ExpectQuery("SELECT \\* FROM `stocks`").WillReturnRows(rows)
 			})
 
@@ -65,7 +66,7 @@ var _ = Describe("Stock Repository", func() {
 		Context("When it has stocks", func() {
 
 			BeforeEach(func() {
-				rows := sqlmock.NewRows([]string{"name", "ticker"}).AddRow("Weg", "WEGE3")
+				rows := sqlmock.NewRows([]string{"id", "name", "ticker"}).AddRow("123", "Weg", "WEGE3")
 				mock.ExpectQuery("SELECT \\* FROM `stocks`").WillReturnRows(rows)
 			})
 
@@ -84,12 +85,43 @@ var _ = Describe("Stock Repository", func() {
 		})
 	})
 
+	Describe("Getting stock by id", func() {
+
+		Context("When there is no stock", func() {
+
+			BeforeEach(func() {
+				rows := sqlmock.NewRows([]string{"id", "name", "ticker"})
+				mock.ExpectQuery("SELECT \\* FROM `stocks` WHERE `stocks`.`id`").WillReturnRows(rows)
+			})
+
+			It("should return an error", func() {
+				_, err := repository.GetByID("123")
+				Ω(err).ShouldNot(BeNil())
+				Ω(errors.Is(err, gorm.ErrRecordNotFound)).Should(BeTrue())
+			})
+		})
+
+		Context("When there is a stock", func() {
+
+			BeforeEach(func() {
+				rows := sqlmock.NewRows([]string{"id", "name", "ticker"}).AddRow(123, "Weg", "WEGE3")
+				mock.ExpectQuery("SELECT \\* FROM `stocks` WHERE `stocks`.`id`").WillReturnRows(rows)
+			})
+
+			It("should return the stock", func() {
+				stock, err := repository.GetByID("123")
+				Ω(stock).Should(Equal(weg))
+				Ω(err).Should(BeNil())
+			})
+		})
+	})
+
 	Describe("Saving stocks", func() {
 
 		Context("When add a stock", func() {
 
 			BeforeEach(func() {
-				mock.ExpectExec("INSERT INTO `stocks`").WithArgs("Weg", "WEGE3").WillReturnResult(sqlmock.NewResult(0, 1))
+				mock.ExpectExec("INSERT INTO `stocks`").WithArgs("Weg", "WEGE3", 123).WillReturnResult(sqlmock.NewResult(123, 1))
 			})
 
 			It("should return the saved element", func() {

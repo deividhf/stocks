@@ -11,28 +11,39 @@ import (
 type StockRepository interface {
 	Save(stock entity.Stock) entity.Stock
 	FindAll() []entity.Stock
+	GetByID(id string) (entity.Stock, error)
 }
 
 type stockRepository struct {
 	db *gorm.DB
 }
 
-func (s *stockRepository) Save(stock entity.Stock) entity.Stock {
-	if result := s.db.Create(&stock); result.Error != nil {
+func (r *stockRepository) Save(stock entity.Stock) entity.Stock {
+	if result := r.db.Create(&stock); result.Error != nil {
 		log.Panicf("Error on saving stock. %s", result.Error)
 	}
 
 	return stock
 }
 
-func (s *stockRepository) FindAll() []entity.Stock {
+func (r *stockRepository) FindAll() []entity.Stock {
 	stocks := make([]entity.Stock, 1)
 
-	if result := s.db.Find(&stocks); result.Error != nil {
+	if result := r.db.Find(&stocks); result.Error != nil {
 		log.Panicf("Error on getting all stocks. %s", result.Error)
 	}
 
 	return stocks
+}
+
+func (r *stockRepository) GetByID(id string) (entity.Stock, error) {
+	stock := entity.Stock{}
+
+	if err := r.db.First(&stock, id).Error; err != nil {
+		return stock, err
+	}
+
+	return stock, nil
 }
 
 // New creates a new StockRepository
