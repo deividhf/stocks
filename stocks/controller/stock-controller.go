@@ -2,29 +2,28 @@ package controller
 
 import (
 	"github.com/deividhf/stocks/stocks/entity"
-	"github.com/deividhf/stocks/stocks/repository"
 	"github.com/gin-gonic/gin"
 )
 
-// StockController deals with the request
-type StockController interface {
-	Save(ctx *gin.Context) (entity.Stock, error)
+type StockRepository interface {
+	Save(stock entity.Stock) entity.Stock
 	FindAll() []entity.Stock
 	GetByID(id string) (entity.Stock, error)
+	DeleteByID(id string) error
 }
 
-type stockController struct {
-	repository repository.StockRepository
+type StockControllerImpl struct {
+	repository StockRepository
 }
 
 // New creates a StockController
-func New(repository repository.StockRepository) StockController {
-	return &stockController{
+func New(repository StockRepository) *StockControllerImpl {
+	return &StockControllerImpl{
 		repository: repository,
 	}
 }
 
-func (c *stockController) Save(ctx *gin.Context) (entity.Stock, error) {
+func (c *StockControllerImpl) Save(ctx *gin.Context) (entity.Stock, error) {
 	var stock entity.Stock
 
 	if err := ctx.ShouldBindJSON(&stock); err != nil {
@@ -34,10 +33,10 @@ func (c *stockController) Save(ctx *gin.Context) (entity.Stock, error) {
 	return c.repository.Save(stock), nil
 }
 
-func (c *stockController) FindAll() []entity.Stock {
+func (c *StockControllerImpl) FindAll() []entity.Stock {
 	return c.repository.FindAll()
 }
 
-func (c *stockController) GetByID(id string) (entity.Stock, error) {
+func (c *StockControllerImpl) GetByID(id string) (entity.Stock, error) {
 	return c.repository.GetByID(id)
 }

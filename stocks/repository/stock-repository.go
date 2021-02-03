@@ -8,18 +8,11 @@ import (
 )
 
 // StockRepository is responsible to manage the core logic by communicating with entity layer
-type StockRepository interface {
-	Save(stock entity.Stock) entity.Stock
-	FindAll() []entity.Stock
-	GetByID(id string) (entity.Stock, error)
-	DeleteByID(id string) error
-}
-
-type stockRepository struct {
+type StockRepositoryImpl struct {
 	db *gorm.DB
 }
 
-func (r *stockRepository) Save(stock entity.Stock) entity.Stock {
+func (r *StockRepositoryImpl) Save(stock entity.Stock) entity.Stock {
 	if result := r.db.Create(&stock); result.Error != nil {
 		log.Panicf("Error on saving stock. %s", result.Error)
 	}
@@ -27,7 +20,7 @@ func (r *stockRepository) Save(stock entity.Stock) entity.Stock {
 	return stock
 }
 
-func (r *stockRepository) FindAll() []entity.Stock {
+func (r *StockRepositoryImpl) FindAll() []entity.Stock {
 	stocks := make([]entity.Stock, 1)
 
 	if result := r.db.Find(&stocks); result.Error != nil {
@@ -37,7 +30,7 @@ func (r *stockRepository) FindAll() []entity.Stock {
 	return stocks
 }
 
-func (r *stockRepository) GetByID(id string) (entity.Stock, error) {
+func (r *StockRepositoryImpl) GetByID(id string) (entity.Stock, error) {
 	stock := entity.Stock{}
 
 	if err := r.db.First(&stock, id).Error; err != nil {
@@ -47,7 +40,7 @@ func (r *stockRepository) GetByID(id string) (entity.Stock, error) {
 	return stock, nil
 }
 
-func (r *stockRepository) DeleteByID(id string) error {
+func (r *StockRepositoryImpl) DeleteByID(id string) error {
 	if r.db.Delete(&entity.Stock{}, id).RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	}
@@ -55,6 +48,6 @@ func (r *stockRepository) DeleteByID(id string) error {
 }
 
 // New creates a new StockRepository
-func New(db *gorm.DB) StockRepository {
-	return &stockRepository{db}
+func New(db *gorm.DB) *StockRepositoryImpl {
+	return &StockRepositoryImpl{db}
 }

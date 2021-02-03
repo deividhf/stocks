@@ -5,9 +5,17 @@ import (
 
 	"github.com/deividhf/stocks/config"
 	"github.com/deividhf/stocks/stocks/controller"
+	"github.com/deividhf/stocks/stocks/entity"
 	"github.com/deividhf/stocks/stocks/repository"
 	"github.com/gin-gonic/gin"
 )
+
+// StockController deals with the request
+type StockController interface {
+	Save(ctx *gin.Context) (entity.Stock, error)
+	FindAll() []entity.Stock
+	GetByID(id string) (entity.Stock, error)
+}
 
 // StockRouter is the router of stocks
 type StockRouter interface {
@@ -15,7 +23,7 @@ type StockRouter interface {
 }
 
 type stockRouter struct {
-	controller controller.StockController
+	controller StockController
 }
 
 // DefaultRouter returns the default router
@@ -26,7 +34,7 @@ func DefaultRouter() StockRouter {
 }
 
 // New creates the a new router receiving a controller
-func New(controller controller.StockController) StockRouter {
+func New(controller StockController) StockRouter {
 	return &stockRouter{
 		controller: controller,
 	}
