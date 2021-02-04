@@ -12,18 +12,18 @@ type StockRepository interface {
 	DeleteByID(id string) error
 }
 
-type StockControllerImpl struct {
+type StockResourceController struct {
 	repository StockRepository
 }
 
 // New creates a StockController
-func New(repository StockRepository) *StockControllerImpl {
-	return &StockControllerImpl{
+func New(repository StockRepository) *StockResourceController {
+	return &StockResourceController{
 		repository: repository,
 	}
 }
 
-func (c *StockControllerImpl) Save(ctx *gin.Context) (entity.Stock, error) {
+func (c *StockResourceController) Save(ctx *gin.Context) (entity.Stock, error) {
 	var stock entity.Stock
 
 	if err := ctx.ShouldBindJSON(&stock); err != nil {
@@ -33,10 +33,10 @@ func (c *StockControllerImpl) Save(ctx *gin.Context) (entity.Stock, error) {
 	return c.repository.Save(stock), nil
 }
 
-func (c *StockControllerImpl) FindAll() []entity.Stock {
+func (c *StockResourceController) FindAll() []entity.Stock {
 	return c.repository.FindAll()
 }
 
-func (c *StockControllerImpl) GetByID(id string) (entity.Stock, error) {
+func (c *StockResourceController) GetByID(id string) (entity.Stock, error) {
 	return c.repository.GetByID(id)
 }

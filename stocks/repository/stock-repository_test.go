@@ -20,7 +20,7 @@ func TestStockRepository(t *testing.T) {
 
 var (
 	weg        = entity.Stock{ID: 123, Name: "Weg", Ticker: "WEGE3"}
-	repository *StockRepositoryImpl
+	repository *StockDatabaseRepository
 	db         *sql.DB
 	gdb        *gorm.DB
 	mock       sqlmock.Sqlmock
