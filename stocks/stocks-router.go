@@ -15,6 +15,7 @@ type StockController interface {
 	Save(ctx *gin.Context) (entity.Stock, error)
 	FindAll() []entity.Stock
 	GetByID(id string) (entity.Stock, error)
+	DeleteByID(id string) error
 }
 
 // StockRouter is the router of stocks
@@ -67,6 +68,17 @@ func (r *stockRouter) Routes(route *gin.Engine) {
 			})
 		} else {
 			ctx.JSON(http.StatusCreated, stock)
+		}
+	})
+
+	stocks.DELETE("/:stock_id", func(ctx *gin.Context) {
+		err := r.controller.DeleteByID(ctx.Param("stock_id"))
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+		} else {
+			ctx.JSON(http.StatusNoContent, gin.H{})
 		}
 	})
 

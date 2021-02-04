@@ -132,4 +132,39 @@ var _ = Describe("Stocks Router Test", func() {
 			})
 		})
 	})
+
+	Describe("Deleting stocks", func() {
+
+		Context("When there is no stock", func() {
+
+			BeforeEach(func() {
+				repositoryMock.On("DeleteByID", "123").Return(gorm.ErrRecordNotFound).Once()
+
+				w = httptest.NewRecorder()
+				req, _ := http.NewRequest("DELETE", "/stocks/123", nil)
+				router.ServeHTTP(w, req)
+			})
+
+			It("should return not found", func() {
+				Ω(w.Code).Should(Equal(404))
+				Ω(w.Body.String()).Should(Equal(`{"error":"record not found"}`))
+			})
+		})
+
+		Context("When there is a stock", func() {
+
+			BeforeEach(func() {
+				repositoryMock.On("DeleteByID", "123").Return(nil).Once()
+
+				w = httptest.NewRecorder()
+				req, _ := http.NewRequest("DELETE", "/stocks/123", nil)
+				router.ServeHTTP(w, req)
+			})
+
+			It("should delete the record", func() {
+				Ω(w.Code).Should(Equal(204))
+				Ω(w.Body.String()).Should(BeEmpty())
+			})
+		})
+	})
 })

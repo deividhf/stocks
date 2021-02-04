@@ -40,3 +40,7 @@ func (c *StockResourceController) FindAll() []entity.Stock {
 func (c *StockResourceController) GetByID(id string) (entity.Stock, error) {
 	return c.repository.GetByID(id)
 }
+
+func (c *StockResourceController) DeleteByID(id string) error {
+	return c.repository.DeleteByID(id)
+}
